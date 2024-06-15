@@ -1,6 +1,6 @@
 <h2>1.1 Data preparation:</h2>
 Based on observations on EDA, problems can be solved in preparation step is:
-* Large Number of Frames: we developed method to increase spacing between frames by reduce the slice thickness to only 5 millimeters, skipping the intermediate scans (slice thickness range from 0.5 to 5mm) based on current thickness from each dicom frame metadata.
+* Large Number of Frames: I developed method to increase spacing between frames by reduce the slice thickness to only 5 millimeters, skipping the intermediate scans (slice thickness range from 0.5 to 5mm) based on current thickness from each dicom frame metadata.
 
 ```
 curr_tick = df_dicom.loc[(p, s), "SliceThickness"].mean()
@@ -12,7 +12,7 @@ dcm_paths = []
 
 ```
 
-* Frame Size Relative to Quantity: simply we will resize data from 512x512 to 256x256.
+* Frame Size Relative to Quantity: simply, I will resize data from 512x512 to 256x256.
 * Solving problem related to datatype:
 	- Bit Depth Adjustment and Photometric Interpretation: If the DICOM image has a Photometric Interpretation of "MONOCHROME1", it inverts the pixel values to ensure they are correctly interpreted.
 
@@ -39,7 +39,7 @@ ASASA
 	- Normalization: Finally, the pixel values are normalized to the range [0, 1] by subtracting the minimum value and dividing by the range (maximum value - minimum value). This ensures that the pixel values are standardized and suitable for processing or display, at the end it multiply to  255 for visibility.
 
 <h2>Data retrieval technique as input:</h2>
-Given the persistently large number of frames and the variability in their quantity within each scan, we've developed an initial strategy to address this. We'll extract a subset of frames from each scan, focusing on the abdominal region. Specifically, we'll select four frames from the middle section of each scan using a predetermined threshold. 
+Given the persistently large number of frames and the variability in their quantity within each scan, I've developed an initial strategy to address this. I'll extract a subset of frames from each scan, focusing on the abdominal region. Specifically, I'll select four frames from the middle section of each scan using a predetermined threshold. 
 
 using the code below:
 
@@ -61,7 +61,7 @@ def select_elements_with_spacing(input list, spacing):
     return selected_elements
 ```
 
-Initially, we assumed that each scan encompasses the entire CT body, although this wasn't universally the case. To extract the middle section from the body, we set the upper bound index at 40% of the scan length and the lower bound at 60%. We then divided this segment into thirds to obtain the two indices situated in the middle between the upper and lower bounds.
+Initially, I assumed that each scan encompasses the entire CT body, although this wasn't universally the case. To extract the middle section from the body, I set the upper bound index at 40% of the scan length and the lower bound at 60%. We then divided this segment into thirds to obtain the two indices situated in the middle between the upper and lower bounds.
 
 ![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/5a04c46f-4ff9-4de0-9c53-dd484181eee1)
  
