@@ -16,18 +16,18 @@ dcm_paths = []
 * Solving problem related to datatype:
 	- Bit Depth Adjustment and Photometric Interpretation: If the DICOM image has a Photometric Interpretation of "MONOCHROME1", it inverts the pixel values to ensure they are correctly interpreted.
 
-```
-if dicom_image.PixelRepresentation == 1:
-    bit_shift = dicom_image.BitsAllocated - dicom_image.BitsStored
-    dtype = pixel_array.dtype 
-    new_array = (pixel_array << bit_shift).astype(dtype) >>  bit_shift
-    pixel_array = pydicom.pixel_data_handlers.util.apply_modality_lut(new_array,
-    dicom_image)
-if dicom_image.PhotometricInterpretation == "MONOCHROME1":
-    pixel_array = 1 - pixel_array
+	```
+	if dicom_image.PixelRepresentation == 1:
+	    bit_shift = dicom_image.BitsAllocated - dicom_image.BitsStored
+	    dtype = pixel_array.dtype 
+	    new_array = (pixel_array << bit_shift).astype(dtype) >>  bit_shift
+	    pixel_array = pydicom.pixel_data_handlers.util.apply_modality_lut(new_array,
+	    dicom_image)
+	if dicom_image.PhotometricInterpretation == "MONOCHROME1":
+	    pixel_array = 1 - pixel_array
+	
+	```
 
-```
-`
 	- Hounsfield Unit Transformation: The pixel values are transformed to Hounsfield units using the Rescale Intercept and Rescale Slope provided in the DICOM metadata.
 	- Windowing: Windowing is applied to focus on a specific range of pixel values defined by the Window Center and Window Width attributes. Pixel values outside this range are clipped to ensure the resulting image has appropriate contrast.
 	- Normalization: Finally, the pixel values are normalized to the range [0, 1] by subtracting the minimum value and dividing by the range (maximum value - minimum value). This ensures that the pixel values are standardized and suitable for processing or display, at the end it multiply to  255 for visibility.
