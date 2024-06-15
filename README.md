@@ -29,6 +29,12 @@ dcm_paths = []
 	```
 
 	- Hounsfield Unit Transformation: The pixel values are transformed to Hounsfield units using the Rescale Intercept and Rescale Slope provided in the DICOM metadata.
+```
+ASASAS
+ASASA
+ASASA
+```
+`
 	- Windowing: Windowing is applied to focus on a specific range of pixel values defined by the Window Center and Window Width attributes. Pixel values outside this range are clipped to ensure the resulting image has appropriate contrast.
 	- Normalization: Finally, the pixel values are normalized to the range [0, 1] by subtracting the minimum value and dividing by the range (maximum value - minimum value). This ensures that the pixel values are standardized and suitable for processing or display, at the end it multiply to  255 for visibility.
 
