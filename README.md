@@ -9,18 +9,21 @@ Abdominal trauma refers to any injury to the abdomen, which is the region of the
 
 <h2>Final Methodology: </h2>
 1. Convert DICOM files into NIFTI using dcm2niix package. you can see more information about it from the link https://github.com/rordenlab/dcm2niix
-```
+
+```python
 def Dcm2Nii(dcm_pth,nii_pth):
     print("converting...")
     os.system(f'dcm2niix -o {nii_pth} {dcm_pth}')
     print("DONE")
 ```
 2. Genrating masks only for specified abdominal organs to get region of interest later. we used Total Segmentator as segmentation model to know more about total semgentator go to the link: https://github.com/wasserth/TotalSegmentator
-```
+   
+```python
 def genMasks(nii_pth, ms_pth):
     print("generating masks...")
     input_pth  = j(nii_pth,[f for f in l(nii_pth) if f.endswith('.nii')][0])
     os.system(f"TotalSegmentator -i {input_pth} -o {ms_pth} --fast --roi_subset liver urinary_bladder")
     print("Done")
 ```
+
 3.  Extract region of interest (ROI) from generated mask by takiong only the first indices for first layer in the liver and the last layer for bowel 
