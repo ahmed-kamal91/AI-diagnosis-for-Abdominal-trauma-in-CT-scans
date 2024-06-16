@@ -9,6 +9,8 @@ Abdominal trauma refers to any injury to the abdomen, which is the region of the
 
 <h2>Final Methodology: </h2>
 
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/a93764df-48ad-4fc0-b87e-0a79eeb5eb24)
+
 1. **Convert DICOM files into NIFTI** using dcm2niix package. you can see more information about it from the link https://github.com/rordenlab/dcm2niix
 
 ```python
@@ -29,8 +31,6 @@ def genMasks(nii_pth, ms_pth):
 
 3.  **Extract region of interest (ROI)** from generated mask by takiong only the first indices for first layer in the liver and the last layer for bowel
 
-![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/a93764df-48ad-4fc0-b87e-0a79eeb5eb24)
-
 ```python
 def getROI(mfolder_pth, thresh):
 
@@ -48,12 +48,12 @@ def getROI(mfolder_pth, thresh):
 ```
 
 4. preparation for DICOM data by
-   - getting pixel array, increase spacing between frames by reduce the slice thickness to only 5 millimeters, skipping the intermediate scans (slice thickness range from 0.5 to 5mm) based on current thickness from each dicom frame metadata.
-   - **resize data** from 512x512 to 256x256.
-   - **Bit Depth Adjustment and Photometric Interpretation:** If the DICOM image has a Photometric Interpretation of "MONOCHROME1", it inverts the pixel values to ensure they are correctly interpreted.
-   - **Hounsfield Unit Transformation:** The pixel values are transformed to Hounsfield units using the Rescale Intercept and Rescale Slope provided in the DICOM metadata.
-   - **Windowing:** Windowing is applied to focus on a specific range of pixel values defined by the Window Center and Window Width attributes. Pixel values outside this range are clipped to ensure the resulting image has appropriate contrast.
-   - **Normalization:** Finally, the pixel values are normalized to the range [0, 1] by subtracting the minimum value and dividing by the range (maximum value - minimum value). This ensures that the pixel values are standardized and suitable for processing or display, at the end it multiply to  255 for visibility.
+   - getting pixel array, increase spacing between frames by reduce the slice thickness to only 5 millimeters, skipping the intermediate scans (slice thickness range from 0.5 to 5mm) based on current thickness from each dicom frame metadata.</br>
+   - **resize data** from 512x512 to 256x256.</br>
+   - **Bit Depth Adjustment and Photometric Interpretation:** If the DICOM image has a Photometric Interpretation of "MONOCHROME1", it inverts the pixel values to ensure they are correctly interpreted.</br>
+   - **Hounsfield Unit Transformation:** The pixel values are transformed to Hounsfield units using the Rescale Intercept and Rescale Slope provided in the DICOM metadata.</br>
+   - **Windowing:** Windowing is applied to focus on a specific range of pixel values defined by the Window Center and Window Width attributes. Pixel values outside this range are clipped to ensure the resulting image has appropriate contrast.</br>
+   - **Normalization:** Finally, the pixel values are normalized to the range [0, 1] by subtracting the minimum value and dividing by the range (maximum value - minimum value). This ensures that the pixel values are standardized and suitable for processing or display, at the end it multiply to  255 for visibility.</br>
 
 ```python
 def preprocess_dcm2img (dicom_image):
@@ -127,6 +127,7 @@ def initPreprocess(dicom_scanFolder_pth, jpgScan_pth, strt, end, TICK=5, SIZE=25
 ```
 5. Data preprocessing as model input: using ROI (start and end indices) we will split scan frames into 9 parts to take indices in between to always get fixed number of frames as input for model architecture.
 ![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/84344375-28fa-40a7-87a9-44753ddd30ac)
+figure assume splitting into 3 parts to get 4 indicies.
 ```python
 def prepareModelInput(jpg_scanFolder_pth, num_frames=10):
     
@@ -151,5 +152,80 @@ def prepareModelInput(jpg_scanFolder_pth, num_frames=10):
     return image
 ```
 
+6. forward data into the trained model architecture which is mainly count on effcientnetb0
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/1928cf0c-8bdd-46fc-ba93-7cbbd0f569eb)
+```python
+class CNNModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        
+        self.input = nn.Conv2d(10, 3, kernel_size = 3)
+        
+        model = models.efficientnet_b0(weights = 'IMAGENET1K_V1')
+        
+        self.features = model.features
+        self.avgpool = model.avgpool
+        
+        #heads
+        self.bowel = nn.Linear(1280, 1) #1,0
 
- 
+        self.extravasation = nn.Linear(1280, 1) #1.0
+
+        self.kidney = nn.Linear(1280, 3)
+
+        self.liver = nn.Linear(1280,3) 
+
+        self.spleen = nn.Linear(1280, 3)
+    
+    def forward(self, x):
+        
+        # extract features
+        x = self.input(x)
+        x = self.features(x)
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        
+        # output logits
+        bowel = self.bowel(x)
+        extravsation = self.extravasation(x)
+        kidney = self.kidney(x)
+        liver = self.liver(x)
+        spleen = self.spleen(x)
+        
+        return bowel, extravsation, kidney, liver, spleen
+```
+loading trained model and get results:
+```python
+def runModel(model_path, modelInput): 
+    "initial model..."
+    model = CNNModel()
+    state_dict = torch.load(model_path)
+    model.load_state_dict(state_dict)
+    model.eval()  
+    print('predicting...')
+    with torch.no_grad():
+        bowel, extravasation, kidney, liver, spleen = model(modelInput)
+        print('DONE')
+        return bowel, extravasation, kidney, liver, spleen
+    
+```
+7. get result as final readable outptut
+```python
+def getResults(b, e, k, l, s, thresh=0.5):
+    
+    getdic = lambda name: {0: f"Healthy {name}", 1: f"Low Injury {name}", 2: f"High Injury {name}"}
+
+    br = "Healthy bowel" if b < 0.5 else "injured bowel"
+    er = "NO extravasation detected" if e < 0.5 else "extravasation DETECTED"
+
+    kr = np.argmax(k).item()
+    kr = getdic("Kidneys")[kr]
+
+    lr = np.argmax(l).item()
+    lr = getdic("Liver")[lr]
+
+    sr = np.argmax(s).item()
+    sr = getdic("Spleen")[sr]
+
+    return br, er, kr, lr, sr
+```
