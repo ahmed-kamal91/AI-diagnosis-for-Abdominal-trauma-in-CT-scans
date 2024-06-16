@@ -11,7 +11,8 @@ Abdominal trauma refers to any injury to the abdomen, which is the region of the
 
 <h2>Final Methodology: </h2>
 
-![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/a93764df-48ad-4fc0-b87e-0a79eeb5eb24)
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/402f6a14-5a47-4477-a94b-1b0c534f65d6)
+
 
 ```python
 #pipeline
