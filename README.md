@@ -2,7 +2,9 @@
 Abdominal trauma refers to any injury to the abdomen, which is the region of the body between the chest and the pelvis. The physical examination is not enough for diagnosing traumatic abdominal injuriesand accurate and immediate diagnosis is critical to initiate timely interventions. Among the different diagnostic methods, computed tomography (CT) stands out as an indispensable tool for accurately detecting abdominal injuries due to its ability to provide detailed cross-sectional images.Blunt force abdominal injuries are the most common type of abdominal injury and are often caused by car accidents. They can lead to damage to internal organs and bleeding, sometimes without any pain. Therefore, detecting and classifying these injuries is critical for effective treatment. So, I worked on my graduation project to utilize deep learning capabilities to help medical professionals rapidly detect abdominal injuries accuraterly.
 
 <h2>Notes to be discussed first</h2>
-![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/397e5ea7-2894-43f4-8078-5c8b9bbf90bd)
+
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/50f078a8-d020-424e-b635-9851d6ba7035)
+
 
 * briefly, Data is unbalanced so we will count on F1-score, recall and precision for model performance evaluation
 * Data we worked on doesn't contain all abdominal organs. only 4 abdomnial organs (which is liver, spleen, kidney and bowel) and existence of extravasation .
@@ -11,8 +13,7 @@ Abdominal trauma refers to any injury to the abdomen, which is the region of the
 
 <h2>Final Methodology: </h2>
 
-![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/402f6a14-5a47-4477-a94b-1b0c534f65d6)
-
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/b5167b91-1446-4287-b2bc-3e585f6be7c0)
 
 ```python
 #pipeline
