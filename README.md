@@ -3,9 +3,7 @@
 Based on observations on EDA, problems can be solved in preparation step
 is:
 
-1.  **Large Number of Frames:**
-
-we developed method to increase spacing between frames by reduce the
+1.  **Large Number of Frames:** we developed method to increase spacing between frames by reduce the
 slice thickness to only 5 millimeters, skipping the intermediate scans
 (slice thickness range from 0.5 to 5mm) based on current thickness from
 each dicom frame metadata.
