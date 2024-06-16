@@ -1,4 +1,4 @@
-**1.1 Data preparation:**
+<h2>Data preparation:</h2>
 
 Based on observations on EDA, problems can be solved in preparation step
 is:
