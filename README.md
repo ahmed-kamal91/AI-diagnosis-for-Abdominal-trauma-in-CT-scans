@@ -24,48 +24,48 @@ each dicom frame metadata.
         transformed to Hounsfield units using the Rescale Intercept and
         Rescale Slope provided in the DICOM metadata.
 
-> *\# Transform to hounsfield units*
->
-> intercept = dicom_image.RescaleIntercept
->
-> slope = dicom_image.RescaleSlope
->
-> pixel_array = pixel_array \* slope + intercept
+    > *\# Transform to hounsfield units*
+    >
+    > intercept = dicom_image.RescaleIntercept
+    >
+    > slope = dicom_image.RescaleSlope
+    >
+    > pixel_array = pixel_array \* slope + intercept
 
-3.  **Windowing:** Windowing is applied to focus on a specific range of
-    pixel values defined by the [Window Center]{.underline} and [Window
-    Width]{.underline} attributes. Pixel values outside this range are
-    clipped to ensure the resulting image has appropriate contrast.
+    3.  **Windowing:** Windowing is applied to focus on a specific range of
+        pixel values defined by the [Window Center]{.underline} and [Window
+        Width]{.underline} attributes. Pixel values outside this range are
+        clipped to ensure the resulting image has appropriate contrast.
 
-> *\# windowing*
->
-> window_center = int(dicom_image.WindowCenter)
->
-> window_width = int(dicom_image.WindowWidth)
->
-> img_min = window_center - window_width // 2
->
-> img_max = window_center + window_width // 2
->
-> pixel_array = pixel_array.copy()
->
-> pixel_array\[pixel_array \< img_min\] = img_min
->
-> pixel_array\[pixel_array \> img_max\] = img_max
+    > *\# windowing*
+    >
+    > window_center = int(dicom_image.WindowCenter)
+    >
+    > window_width = int(dicom_image.WindowWidth)
+    >
+    > img_min = window_center - window_width // 2
+    >
+    > img_max = window_center + window_width // 2
+    >
+    > pixel_array = pixel_array.copy()
+    >
+    > pixel_array\[pixel_array \< img_min\] = img_min
+    >
+    > pixel_array\[pixel_array \> img_max\] = img_max
 
-4.  **Normalization:** Finally, the pixel values are normalized to the
-    range \[0, 1\] by subtracting the minimum value and dividing by the
-    range (maximum value - minimum value). This ensures that the pixel
-    values are standardized and suitable for processing or display, at
-    the end it multiply to 255 for visibility.
+    4.  **Normalization:** Finally, the pixel values are normalized to the
+        range \[0, 1\] by subtracting the minimum value and dividing by the
+        range (maximum value - minimum value). This ensures that the pixel
+        values are standardized and suitable for processing or display, at
+        the end it multiply to 255 for visibility.
 
-> *\# normalization*
->
-> denominator *=* (pixel_array - pixel_array.min())
->
-> *numerator =* (pixel_array.max() - pixel_array.min())
->
-> pixel_array = denominator / *numerator*
+    > *\# normalization*
+    >
+    > denominator *=* (pixel_array - pixel_array.min())
+    >
+    > *numerator =* (pixel_array.max() - pixel_array.min())
+    >
+    > pixel_array = denominator / *numerator*
 
 This marks the initial stage of data preprocessing, marking the starting
 point for our model development journey.
