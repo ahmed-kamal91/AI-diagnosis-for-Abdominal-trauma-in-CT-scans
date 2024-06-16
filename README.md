@@ -2,7 +2,8 @@
 Abdominal trauma refers to any injury to the abdomen, which is the region of the body between the chest and the pelvis. The physical examination is not enough for diagnosing traumatic abdominal injuriesand accurate and immediate diagnosis is critical to initiate timely interventions. Among the different diagnostic methods, computed tomography (CT) stands out as an indispensable tool for accurately detecting abdominal injuries due to its ability to provide detailed cross-sectional images.Blunt force abdominal injuries are the most common type of abdominal injury and are often caused by car accidents. They can lead to damage to internal organs and bleeding, sometimes without any pain. Therefore, detecting and classifying these injuries is critical for effective treatment. So, I worked on my graduation project to utilize deep learning capabilities to help medical professionals rapidly detect abdominal injuries accuraterly.
 
 <h2>Notes to be discussed first</h2>
-
+* briefly, Data is unbalanced so we will count on F1-score, recall and precision for model performance evaluation
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/397e5ea7-2894-43f4-8078-5c8b9bbf90bd)
 * Data we worked on doesn't contain all abdominal organs. only 4 abdomnial organs (which is liver, spleen, kidney and bowel) and existence of extravasation .
 * medical field use image format called DICOM, briefly it considered as the image as an array with additional importatn attributes used by medical field.
 * briefly, NIfTI is a file format used to store three-dimensional (3D) image data, used segmentation model input is nifti file.
@@ -248,6 +249,7 @@ def getResults(b, e, k, l, s, thresh=0.5):
     return br, er, kr, lr, sr
 ```
 <h2>Final Performance:</h2>
+In most classification problem cases Accuracy metrics are being used as a main for performance measurement. accuracy measures the overall correctness of predictions, but it doesn't account for class imbalances. In cases where one class greatly outnumbers the other(s), a model can achieve high accuracy by simply predicting the majority class most of the time. However, this doesn't necessarily indicate that the model is performing well for the minority class(es). so, it’s imperative to evaluate the model's performance metrics that accurately reflect its effectiveness in handling class imbalances across predicted categories which is crucial for obtaining a comprehensive understanding of the model's capabilities and its real-world applicability.
 
 |        | Accuracy      | AUC-ROC       | f1-SCORE      | RECALL        | PRECISION      |
 |--------|---------------|---------------|---------------|---------------|----------------|
