@@ -32,7 +32,7 @@ def Dcm2Nii(dcm_pth,nii_pth):
     os.system(f'dcm2niix -o {nii_pth} {dcm_pth}')
     print("DONE")
 ```
-2. **Genrating masks** only for specified abdominal organs to get region of interest later. we used Total Segmentator as segmentation model to know more about total semgentator go to the link: https://github.com/wasserth/TotalSegmentator
+2. **Generating masks** only for specified abdominal organs to get region of interest later. we used Total Segmentator as segmentation model to know more about total semgentator go to the link: https://github.com/wasserth/TotalSegmentator
    
 ```python
 def genMasks(nii_pth, ms_pth):
@@ -252,8 +252,8 @@ def getResults(b, e, k, l, s, thresh=0.5):
 |        | Accuracy      | AUC-ROC       | f1-SCORE      | RECALL        | PRECISION      |
 |--------|---------------|---------------|---------------|---------------|----------------|
 |        | train | valid | train | valid | train | valid | train | valid | train  | valid |
-| **B**  | 98.23% | 98.56% | 88.19% | 90.49% | 32.98% | 35.54% | 28.24% | 44.17% | 48.73% | 42.08% |
-| **E**  | 92.42% | 91.41% | 85.28% | 87.92% | 40.33% | 43.11% | 51.95% | 60.94% | 34.14% | 35.64% |
-| **L**  | 90.76% | 90.33% | 77.41% | 80.63% | 87.32% | 86.95% | 90.75% | 90.33% | 86.65% | 86.27% |
-| **K**  | 94.14  | 93.86% | 74.68% | 77.82% | 91.71% | 91.24% | 94.13% | 93.86% | 91.41% | 90.38% |
-| **S**  | 90.64% | 90.84% | 75.27% | 77.74% | 87.04% | 87.37% | 90.64% | 90.84% | 86.19% | 86.41% |
+| **Bowel**  | 98.23% | 98.56% | 88.19% | 90.49% | 32.98% | 35.54% | 28.24% | 44.17% | 48.73% | 42.08% |
+| **Extravasation**  | 92.42% | 91.41% | 85.28% | 87.92% | 40.33% | 43.11% | 51.95% | 60.94% | 34.14% | 35.64% |
+| **Liver**  | 90.76% | 90.33% | 77.41% | 80.63% | 87.32% | 86.95% | 90.75% | 90.33% | 86.65% | 86.27% |
+| **Kidney**  | 94.14  | 93.86% | 74.68% | 77.82% | 91.71% | 91.24% | 94.13% | 93.86% | 91.41% | 90.38% |
+| **Spleen**  | 90.64% | 90.84% | 75.27% | 77.74% | 87.04% | 87.37% | 90.64% | 90.84% | 86.19% | 86.41% |
