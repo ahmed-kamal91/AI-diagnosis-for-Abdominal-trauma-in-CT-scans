@@ -28,7 +28,9 @@ def genMasks(nii_pth, ms_pth):
 ```
 
 3.  **Extract region of interest (ROI)** from generated mask by takiong only the first indices for first layer in the liver and the last layer for bowel
-   
+
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/a93764df-48ad-4fc0-b87e-0a79eeb5eb24)
+
 ```python
 def getROI(mfolder_pth, thresh):
 
@@ -123,3 +125,31 @@ def initPreprocess(dicom_scanFolder_pth, jpgScan_pth, strt, end, TICK=5, SIZE=25
             
     print("DONE")
 ```
+5. Data preprocessing as model input: using ROI (start and end indices) we will split scan frames into 9 parts to take indices in between to always get fixed number of frames as input for model architecture.
+![image](https://github.com/ahmed-kamal91/AI-diagnosis-for-Abdominal-trauma-in-CT-scans/assets/91970695/84344375-28fa-40a7-87a9-44753ddd30ac)
+```python
+def prepareModelInput(jpg_scanFolder_pth, num_frames=10):
+    
+    print("input preparing...")
+    
+    frame_pths = sorted([int(f.split('.')[0]) for f in l(jpg_scanFolder_pth)])
+    frame_pths = [str(f)+'.jpeg' for f in frame_pths]
+
+    frame_pths = select_elements_with_spacing( frame_pths, num_frames)
+
+    images = []
+    for f in frame_pths:
+        image = preprocess_jpeg(jpg_scanFolder_pth,f)
+        images.append(image)
+        
+    images = np.stack(images)
+    images = np.expand_dims(images, axis=0)
+    image = torch.tensor(images, dtype = torch.float)
+
+    print("DONE")
+    
+    return image
+```
+
+
+ 
